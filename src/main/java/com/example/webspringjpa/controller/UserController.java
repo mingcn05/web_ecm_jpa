@@ -23,12 +23,15 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute("User") User user,Model model, HttpSession session) {
-        // Kiểm tra thông tin đăng nhập
+
         User u = userService.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+
         if (u != null) {
-            // Lưu thông tin phiên làm việc
-            session.setAttribute("userId", u.getId());
-            return "redirect:/index"; // Chuyển hướng đến trang chính của ứng dụng
+            session.setAttribute("user", u);
+            if(u.getUsername().equals("admin")) return "admin";
+            else{
+                return "redirect:/index";
+            }
         } else {
             model.addAttribute("mess","Thông tin tài khoản hoặc mật khẩu không chính xác");
             return "login";
@@ -37,8 +40,8 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        // Xóa thông tin phiên làm việc khi người dùng đăng xuất
-        session.removeAttribute("userId");
-        return "redirect:/login"; // Chuyển hướng về trang đăng nhập
+
+        session.removeAttribute("user");
+        return "login";
     }
 }

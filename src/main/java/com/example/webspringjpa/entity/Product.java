@@ -45,6 +45,31 @@ public class Product {
     @Basic
     @Column(name = "modifiedby")
     private String modifiedby;
+    public Product() {
+
+    }
+    public Product(long id, String name, String descrip, long categoryId, BigDecimal rating, String image, Integer inventory, double price, Timestamp createddate, Timestamp modifieddate, String createdby, String modifiedby) {
+        this.id = id;
+        this.name = name;
+        this.descrip = descrip;
+        this.categoryId = categoryId;
+        this.rating = rating;
+        this.image = image;
+        this.inventory = inventory;
+        this.price = price;
+        this.createddate = createddate;
+        this.modifieddate = modifieddate;
+        this.createdby = createdby;
+        this.modifiedby = modifiedby;
+    }
+
+    public Product(String name, String image, double price) {
+        this.name = name;
+        this.image = image;
+        this.price = price;
+    }
+
+
 
     public long getId() {
         return id;

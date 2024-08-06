@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,26 +42,23 @@
     <div class="col-lg-6 text-center text-lg-right">
       <div class="d-inline-flex align-items-center">
 
-        <a href="logout" class="nav-item nav-link">Logout</a>
-        <a href="profile.jsp" class="nav-item nav-link">Profile</a>
-
       </div>
     </div>
   </div>
   <div class="row align-items-center py-3 px-xl-5">
     <div class="col-lg-3 d-none d-lg-block">
       <a href="" class="text-decoration-none">
-        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">M</span>Shop</h1>
+        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
       </a>
     </div>
     <div class="col-lg-6 col-6 text-left">
-      <form action="">
+      <form action="search" method="post">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for products">
+          <input type="text" class="form-control" name="keyword" placeholder="Search for products">
           <div class="input-group-append">
-                                <span class="input-group-text bg-transparent text-primary">
-                                    <i class="fa fa-search"></i>
-                                </span>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-search"></i>
+            </button>
           </div>
         </div>
       </form>
@@ -79,18 +77,17 @@
         <h6 class="m-0">Categories</h6>
         <i class="fa fa-angle-down text-dark"></i>
       </a>
-      <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
+      <nav class="collapse  navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
         <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-
-          <a th:href="@{/shop(category = 'Shirts')}" class="nav-item nav-link">Shirts</a>
-          <a th:href="@{/shop(category= 'Jeans')}" class="nav-item nav-link">Jeans</a>
-          <a th:href="@{/shop(category= 'Swimwear')}" class="nav-item nav-link">Swimwear</a>
-          <a th:href="@{/shop(category= 'Sleepwear')}" class="nav-item nav-link">Sleepwear</a>
-          <a th:href="@{/shop(category= 'BSportswear')}" class="nav-item nav-link">Sportswear</a>
-          <a th:href="@{/shop(category= 'Jumpsuits')}" class="nav-item nav-link">Jumpsuits</a>
-          <a th:href="@{/shop(category= 'Blazers')}" class="nav-item nav-link">Blazers</a>
-          <a th:href="@{/shop(category= 'Jackets')}" class="nav-item nav-link">Jackets</a>
-          <a th:href="@{/shop(category= 'Shoes')}" class="nav-item nav-link">Shoes</a>
+          <a href="shop?category=Shirts" class="nav-item nav-link">Shirts</a>
+          <a href="shop?category=Jeans" class="nav-item nav-link">Jeans</a>
+          <a href="shop?category=Swimwear" class="nav-item nav-link">Swimwear</a>
+          <a href="shop?category=Sleepwear" class="nav-item nav-link">Sleepwear</a>
+          <a href="shop?category=Sportswear" class="nav-item nav-link">Sportswear</a>
+          <a href="shop?category=Jumpsuits" class="nav-item nav-link">Jumpsuits</a>
+          <a href="shop?category=Blazers" class="nav-item nav-link">Blazers</a>
+          <a href="shop?category=Jackets" class="nav-item nav-link">Jackets</a>
+          <a href="shop?category=Shoes" class="nav-item nav-link">Shoes</a>
         </div>
       </nav>
     </div>
@@ -103,17 +100,14 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav mr-auto py-0">
-            <a th:href="@{/admin}" class="nav-item nav-link active">Home</a>
-            <a th:href="@{/list_product_admin}" class="nav-item nav-link">Product</a>
-            <a th:href="@{/add_product}" class="nav-item nav-link">Add Product</a>
-            <a th:href="@{/list_category_admin}" class="nav-item nav-link">Category</a>
-            <a th:href="@{/add_category}" class="nav-item nav-link">Add Category</a>
-
-            <a th:href="@{/order}" class="nav-item nav-link">Order</a>
-          </div>
+          <a href="index.jsp" class="nav-item nav-link active">Home</a>
+          <a href="shop" class="nav-item nav-link">Shop</a>
+          <a href="cart.jsp" class="nav-item nav-link">Cart</a>
+          <a href="order.jsp" class="nav-item nav-link">Order</a>
           <div class="navbar-nav ml-auto py-0">
-            <a th:href="@{/logout_admin}" class="nav-item nav-link">Logout</a>
+
+
+            <a href="login.jsp" class="nav-item nav-link">Login/Register</a>
 
           </div>
         </div>
@@ -122,8 +116,76 @@
   </div>
 </div>
 <!-- Navbar End -->
+<!-- Cart Start -->
+<div class="container-fluid pt-5">
+  <div class="row px-xl-5">
+    <div class="col-lg-8 table-responsive mb-5">
+      <table class="table table-bordered text-center mb-0">
+        <thead class="bg-secondary text-dark">
+        <tr>
+          <th>Products</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
 
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <th:block th:each="oi : ${order_items}">
+          <tr class="cart-item" id="item-${status.index}">
+            <td class="align-middle">
+              <img th:src="${item.product.image}" alt="" style="width: 50px;">
+              ${item.product.name}
+            </td>
+            <td class="align-middle item-price">${item.product.price}$</td>
+            <td class="align-middle">
+              <div class="input-group quantity mx-auto" style="width: 100px;">
+                <input type="text" class="form-control form-control-sm bg-secondary text-center item-quantity" value="${item.quantity}" readonly>
+              </div>
+            </td>
+            <td class="align-middle item-total">
+              ${item.product.price * item.quantity}$
+            </td>
+          </tr>
+        </th:block>>
 
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="col-lg-4">
+
+      <div class="card border-secondary mb-5">
+        <div class="card-header bg-secondary border-0">
+          <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-3 pt-1">
+            <h6 class="font-weight-medium">Subtotal</h6>
+            <span class="font-weight-medium subtotal"><%= order.getTotal_amount()-10%>$</span>
+
+          </div>
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-medium">Shipping</h6>
+            <h6 class="font-weight-medium">$10</h6>
+          </div>
+        </div>
+        <div class="card-footer border-secondary bg-transparent">
+          <div class="d-flex justify-content-between mt-2">
+            <h5 class="font-weight-bold">Total</h5>
+            <h5 class="font-weight-bold"><%= order.getTotal_amount()%>$</h5>
+          </div>
+          <form action="check_out" method="post">
+            <input name="addr" value="<%= order.getAddr()%>" type="text" class="form-control" placeholder="Địa chỉ nhận hàng">
+            <button type="submit" class="btn btn-block btn-primary my-3 py-3">Checkout</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Cart End -->
 
 
 <!-- Footer Start -->
@@ -131,7 +193,7 @@
   <div class="row px-xl-5 pt-5">
     <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
       <a href="" class="text-decoration-none">
-        <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">E</span>Shopper</h1>
+        <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">M</span>Shop</h1>
       </a>
       <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p>
       <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>

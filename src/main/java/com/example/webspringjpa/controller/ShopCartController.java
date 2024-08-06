@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -24,16 +25,34 @@ public class ShopCartController {
     @Autowired
     private ShopService shopService;
 
-    @GetMapping("/addToCart")
-    public String addToCart(Model model){
-        model.addAttribute("CartItem", new CartItem());
-        return "detail";
-    }
+//    @GetMapping("/addToCart")
+//    public String addToCart(Model model){
+//        model.addAttribute("CartItem", new CartItem());
+//        return "detail";
+//    }
 
-    @PostMapping("/addToCart")
-    public ResponseEntity<String> addToCart(@ModelAttribute("CartItem") CartItem c) {
-            shoppingCart.addItem(c);
-        return new ResponseEntity<>("success", HttpStatus.OK);
+    @PostMapping("/add_to_cart")
+    public String addToCart(@RequestParam("id") Long id,@RequestParam("quantity") int quantity,HttpSession session) {
+        Product product = shopService.getProductsById(id);
+        CartItem cartItem = new CartItem(product, quantity);
+        List<CartItem> cart = shoppingCart.getItems();
+        if (cart == null) {
+            cart = new ArrayList<>();
+            session.setAttribute("cart", cart);
+        }
+        boolean itemExists = false;
+        for (CartItem item : cart) {
+            if (item.getProduct().getId() == id) {
+                item.setQuantity(item.getQuantity() + quantity);
+                itemExists = true;
+                break;
+            }
+        }
+        if (!itemExists) {
+            cart.add(cartItem);
+        }
+
+        return "cart";
 
 
     }

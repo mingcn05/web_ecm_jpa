@@ -1,7 +1,9 @@
 package com.example.webspringjpa.controller;
 
 
+import com.example.webspringjpa.entity.Comment;
 import com.example.webspringjpa.entity.Product;
+import com.example.webspringjpa.service.CommentService;
 import com.example.webspringjpa.service.SearchService;
 import com.example.webspringjpa.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class ShopController {
     private ShopService shopService;
     @Autowired
     private SearchService searchProducts;
+    @Autowired
+    private CommentService service;
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("name") String keyword, Model model) {
@@ -49,6 +53,8 @@ public class ShopController {
     @GetMapping("/detail/{id}")
     public String showProductDetail(@PathVariable Long id, Model model){
         Product prod =shopService.getProduct(id);
+        List<Comment> lc = service.getCommentByProductId(Integer.parseInt(String.valueOf(id)));
+        model.addAttribute("comments",lc);
         model.addAttribute("product",prod);
         return "detail";
 
